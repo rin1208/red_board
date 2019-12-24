@@ -24,7 +24,7 @@
         </div>
         <div class="chatFlex">
           <label>名前</label>
-          <input v-model="newName" maxlength="20" style="width: 9rem;"/>
+          <input v-model="newName" maxlength="20" style="width: 9rem;" />
         </div>
         <div class="chatFlex">
           <label>メッセージ</label>
@@ -39,6 +39,7 @@
 <script>
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
+import axios from "axios";
 
 export default {
   data() {
@@ -48,11 +49,15 @@ export default {
       newComment: null
     };
   },
-  async asyncData({ app }){
-    const response = await app.$axios.$get("/request");
-    return{
-      texts: response.items
-    }
+  asyncData() {
+    return axios
+      .get(`/request`)
+      .then(res => {
+        return { texts: res.data };
+      })
+      .catch(e => {
+        console.log(e);
+      });
   },
   // localstrageを使うならこれ使う
   // mounted() {
@@ -65,7 +70,7 @@ export default {
   //   }
   // },
   methods: {
-    add() {
+    async add() {
       if (!this.newName) this.newName = "匿名希望";
       if (!this.newComment) return;
 
@@ -73,16 +78,14 @@ export default {
       let textArr = Array.of(this.newName, this.newComment, cratedAt);
       this.texts.push(textArr);
       this.newComment = "";
-      this.save();
-    },
-    remove(x) {
-      this.texts.splice(x, 1);
-      this.save();
-    },
-    save() {
-      console.log(this.texts);
-      let parsed = JSON.stringify(this.texts);
-      localStorage.setItem("texts", parsed);
+      try {
+        await axios.post(`/message`, {
+          data: textArr
+        });
+      } catch (err) {
+        console.log(err.response.status)
+        console.log(err.response.data)
+      }
     }
   },
   computed: {
