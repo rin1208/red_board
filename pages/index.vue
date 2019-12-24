@@ -5,7 +5,6 @@
         <h2 class="chatTitle">
           <span class="chatTitleStyle">Xmas</span>ぼっち掲示板
         </h2>
-        <p>俺らにはネットの</p>
         <hr />
         <div style="margin-bottom: 1.1em;" v-for="(text, index) in texts" :key="index">
           <p>
