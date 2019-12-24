@@ -1,36 +1,40 @@
 <template>
   <div>
-    <div id="app">
-      <h2 class="chatTitle">
-        <span class="chatTitleStyle">Xmas</span>ぼっち掲示板
-      </h2>
-      <hr />
-      <div
-        style="margin-bottom: 1.1em;"
-        v-for="(text, index) in texts"
-        :key="index"
-      >
-        <p>
-          {{ index + 1 }} 名前: <span class="chatName">{{ text[0] }}</span> -
-          {{ text[2] }}
-        </p>
-        <p class="chatText">{{ text[1] }}</p>
-      </div>
-      <hr />
-      <div>
-        <div class="chatAlertBox">
-          <p>名前は20文字以下でお願いします</p>
-          <p>メッセージは200文字いないでお願いします</p>
+    <div class="hoge">
+      <div class="chat">
+        <h2 class="chatTitle">
+          <span class="chatTitleStyle">Xmas</span>ぼっち掲示板
+        </h2>
+        <p>俺らにはネットの</p>
+        <hr />
+        <div style="margin-bottom: 1.1em;" v-for="(text, index) in texts" :key="index">
+          <p>
+            {{ index + 1 }} 名前:
+            <span class="chatName">{{ text[0] }}</span>
+            -
+            {{ text[2] }}
+          </p>
+          <p class="chatText">{{ text[1] }}</p>
         </div>
-        <div class="chatFlex">
-          <label>名前</label>
-          <input v-model="newName" maxlength="20" style="width: 9rem;"/>
+        <hr />
+        <div>
+          <div class="chatAlertBox">
+            <p>名前は20文字以下でお願いします</p>
+            <p>※何も入力しない場合は匿名になります</p>
+            <p>メッセージは200文字以内でお願いします</p>
+          </div>
+          <div class="chatFlex">
+            <label>名前</label>
+            <input v-model="newName" maxlength="20" style="width: 9rem;" />
+          </div>
+          <div class="chatFlex">
+            <label>メッセージ</label>
+            <textarea v-model="newComment" :rows="rows" maxlength="400" />
+          </div>
+          <div class="chatButtonBox">
+            <button @click="add">送信</button>
+          </div>
         </div>
-        <div class="chatFlex">
-          <label>メッセージ</label>
-          <textarea v-model="newComment" :rows="rows" maxlength="400" />
-        </div>
-        <button @click="add">送信</button>
       </div>
     </div>
   </div>
@@ -39,6 +43,7 @@
 <script>
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
+import axios from "axios";
 
 export default {
   data() {
@@ -48,11 +53,16 @@ export default {
       newComment: null
     };
   },
-  async asyncData({ app }){
-    const response = await app.$axios.$get("/request");
-    return{
-      texts: response.items
-    }
+  asyncData() {
+    return axios
+      .get(`http://localhost:8080/request`)
+      .then(res => {
+        console.log(res);
+        // return { texts: res };
+      })
+      .catch(e => {
+        console.log(e);
+      });
   },
   // localstrageを使うならこれ使う
   // mounted() {
@@ -71,18 +81,26 @@ export default {
 
       let cratedAt = dayjs().format("YYYY-MM-D HH:mm:ss");
       let textArr = Array.of(this.newName, this.newComment, cratedAt);
+      console.log(textArr);
       this.texts.push(textArr);
       this.newComment = "";
-      this.save();
+      this.save(textArr);
     },
-    remove(x) {
-      this.texts.splice(x, 1);
-      this.save();
-    },
-    save() {
-      console.log(this.texts);
-      let parsed = JSON.stringify(this.texts);
-      localStorage.setItem("texts", parsed);
+    async save(items) {
+      let hoge = {
+        name: items[0],
+        comment: items[1],
+        time: items[2]
+      };
+      console.log(hoge);
+      try {
+        await axios.post(`http://lcoalhost:8080/message`, {
+          data: hoge
+        });
+      } catch (err) {
+        console.log(err.response.status);
+        console.log(err.response.data);
+      }
     }
   },
   computed: {
@@ -98,6 +116,9 @@ export default {
 
 <style lang="scss" scoped>
 .chat {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #fff;
   &Flex {
     display: flex;
     flex-direction: column;
@@ -132,6 +153,12 @@ export default {
       }
     }
   }
+  &Button {
+    &Box {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
 }
 
 hr {
@@ -144,7 +171,7 @@ hr {
 
 button {
   display: inline-block;
-  margin: 1.5rem 0 0 1.5rem;
+  margin: 1.5rem 1.5rem 0 0;
   border-radius: 5%; /* 角丸       */
   font-size: 18pt; /* 文字サイズ */
   text-align: center; /* 文字位置   */
