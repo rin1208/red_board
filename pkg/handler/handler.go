@@ -16,7 +16,7 @@ func Request(c *gin.Context) {
 	c.JSON(200, &massages)
 
 }
-func Massage(c *gin.Context) {
+func Message(c *gin.Context) {
 	var massages domain.Data
 	rep, _ := repositry.NewDb()
 	defer rep.Close()

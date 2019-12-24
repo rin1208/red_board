@@ -5,7 +5,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-type Shelter struct {
+type Data struct {
 	gorm.Model
 	Name    string `json:"name"`
 	Comment string `json:"comment"`
