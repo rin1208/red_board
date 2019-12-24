@@ -55,10 +55,14 @@ export default {
   },
   asyncData() {
     return axios
-      .get(`http://localhost:8080/request`)
+      .get(`/request`)
       .then(res => {
         console.log(res);
-        // return { texts: res };
+        for (let i = 0; i < res.data.length; i++) {
+          console.log(res.data[i])
+          return { texts: res.data[i]}
+        }
+        // return { texts: res.data };
       })
       .catch(e => {
         console.log(e);
@@ -92,14 +96,14 @@ export default {
         comment: items[1],
         time: items[2]
       };
-      console.log(hoge);
+      let fuga = JSON.stringify(hoge);
+      console.log(fuga)
       try {
-        await axios.post(`http://lcoalhost:8080/message`, {
-          data: hoge
+        await axios.post(`/message`, {
+          data: fuga
         });
       } catch (err) {
-        console.log(err.response.status);
-        console.log(err.response.data);
+        console.log(err);
       }
     }
   },
