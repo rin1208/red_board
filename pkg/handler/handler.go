@@ -1,19 +1,13 @@
 package handler
 
 import (
-	"net/url"
-	"red_board/pkg/api"
 	"red_board/pkg/repositry"
-	"red_board/pkg/domain"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/gin-gonic/gin"
 
+	"github.com/gin-gonic/gin"
 )
 
-func Request(c *gin.Context){
-	var shell []domain.Shelter
+func Request(c *gin.Context) {
 	rep, _ := repositry.NewDb()
 	defer rep.Close()
-
 
 }

@@ -12,7 +12,7 @@ func main() {
 
 	r.Use(static.Serve("/", static.LocalFile("./dist", true)))
 
-	r.POST("/api/request", handler.Request())
+	r.GET("/api/request", handler.Request)
 
 	r.Run()
 }
