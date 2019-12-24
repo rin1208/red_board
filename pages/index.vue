@@ -53,14 +53,16 @@ export default {
       newComment: null
     };
   },
-  asyncData() {
-    return axios
+  mounted(){
+    axios
       .get(`/request`)
       .then(res => {
         console.log(res);
+        console.log(res.data);
         for (let i = 0; i < res.data.length; i++) {
-          console.log(res.data[i])
-          return { texts: res.data[i]}
+          let piyo = [res.data[i].name, res.data[i].comment, res.data[i].time];
+          console.log(this)
+          this.texts.push(piyo);
         }
         // return { texts: res.data };
       })
@@ -87,20 +89,16 @@ export default {
       let textArr = Array.of(this.newName, this.newComment, cratedAt);
       console.log(textArr);
       this.texts.push(textArr);
+      console.log(this.texts)
       this.newComment = "";
       this.save(textArr);
     },
     async save(items) {
-      let hoge = {
-        name: items[0],
-        comment: items[1],
-        time: items[2]
-      };
-      let fuga = JSON.stringify(hoge);
-      console.log(fuga)
       try {
         await axios.post(`/message`, {
-          data: fuga
+          name: items[0],
+          comment: items[1],
+          time: items[2]
         });
       } catch (err) {
         console.log(err);
