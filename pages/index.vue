@@ -3,7 +3,7 @@
     <div id="app">
       <h2>Xmasぼっち掲示板</h2>
       <hr />
-      <div style="margin-bottom: 1.1em;" v-for="(text, n) in texts" :key="text">
+      <div style="margin-bottom: 1.1em;" v-for="(text, index) in texts" :key="index">
         <p>
           <span class="text"
             >名前: {{ text[0] }}「{{ text[1] }} - {{ text[2] }}」</span
@@ -54,7 +54,6 @@ export default {
       let cratedAt = dayjs().format("YYYY-MM-D HH:mm:ss");
       let textArr = Array.of(this.newName, this.newComment, cratedAt);
       this.texts.push(textArr);
-      this.newName = "";
       this.newComment = "";
       this.save();
     },
@@ -63,6 +62,7 @@ export default {
       this.save();
     },
     save() {
+      console.log(this.texts)
       let parsed = JSON.stringify(this.texts);
       localStorage.setItem("texts", parsed);
     }
