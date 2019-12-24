@@ -13,7 +13,7 @@ func main() {
 	r.Use(static.Serve("/", static.LocalFile("./dist", true)))
 
 	r.GET("/request", handler.Request)
-	r.POST("/massage", handler.Massage)
+	r.POST("/message", handler.Message)
 
 	r.Run()
 }

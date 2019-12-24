@@ -9,15 +9,15 @@ import (
 )
 
 func Request(c *gin.Context) {
-	var massages []domain.Shelter
+	var massages []domain.Data
 	rep, _ := repositry.NewDb()
 	defer rep.Close()
 	rep.Find(&massages)
 	c.JSON(200, &massages)
 
 }
-func Massage(c *gin.Context) {
-	var massages domain.Shelter
+func Message(c *gin.Context) {
+	var massages domain.Data
 	rep, _ := repositry.NewDb()
 	defer rep.Close()
 	c.BindJSON(&massages)

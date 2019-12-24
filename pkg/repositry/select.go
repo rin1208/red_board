@@ -13,7 +13,7 @@ type Db struct {
 
 func NewDb() (Db, error) {
 	client, err := gorm.Open("mysql", "root:root@tcp([mysql]:3306)/hoge?charset=utf8mb4&parseTime=true")
-	client.AutoMigrate(&domain.Shelter{})
+	client.AutoMigrate(&domain.Data{})
 	return Db{client: client}, err
 }
 func (db *Db) Find(shell interface{}) {
