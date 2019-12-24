@@ -9,12 +9,13 @@ $ docker-compose build
 $ docker-compose up -d
 ```
 
-#接続先  
-##MySQL
+# 接続先
+
+## MySQL
 
 > http://localhost:8000/
 
-##フロント
+## フロント
 
 > http://localhost:8080/
 
